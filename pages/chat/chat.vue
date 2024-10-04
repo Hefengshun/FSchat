@@ -4,37 +4,44 @@
 		<scroll-view class="message-list" scroll-y :scroll-into-view="lastMessageId">
 			<view v-for="(message, index) in messages" :key="index" :id="'message-' + index" class="message-wrapper">
 				<view :class="['message', message.sender === 'You' ? 'message-right' : 'message-left']">
-					<text>{{ message.text }}</text>
+					<text>{{ message.content }}</text>
 				</view>
 			</view>
 		</scroll-view>
 		<view class="input-container">
 			<input type="text" adjust-position="true" v-model="newMessage" placeholder="Type a message"
 				@confirm="sendMessage" @focus="handleFocus" @blur="handleBlur" />
-			<button @click="sendMessage">Send</button>
+			<button @click="sendMessage">发送</button>
+			<button @click="loadConversationMassage">刷新</button>
 		</view>
 	</view>
 </template>
 
 <script>
+	import {
+		sendMessage,
+		GetMessagesForConversation
+	} from "@/services/api.js"
 	export default {
 		data() {
 			return {
-				messages: [{
-						sender: 'Alice',
-						text: 'Hello!'
-					},
-					{
-						sender: 'You',
-						text: 'Hi, how are you?'
-					},
-					{
-						sender: 'Alice',
-						text: 'Hello!'
-					},
+				messages: [
+					// {
+					// 	sender: 'Alice',
+					// 	content: 'Hello!'
+					// },
+					// {
+					// 	sender: 'You',
+					// 	content: 'Hi, how are you?'
+					// },
+					// {
+					// 	sender: 'Alice',
+					// 	content: 'Hello!'
+					// },
 				],
 				newMessage: '',
 				scrollHeight: 'calc(100vh - 50px)', // 50px 为输入框高度
+				query: {}
 			};
 		},
 		computed: {
@@ -42,24 +49,60 @@
 				return 'message-' + (this.messages.length - 1);
 			},
 		},
+		onLoad: function(option) {
+			this.query = option;
+			if (option.exist) {
+				// 这里是会话存在这时间需要加载信息
+				this.loadConversationMassage()
+			}
+			console.log(this.query)
+		},
 		methods: {
-			sendMessage() {
-				if (this.newMessage.trim() !== '') {
-					this.messages.push({
-						sender: 'You',
-						text: this.newMessage
-					});
-					this.newMessage = '';
-					this.$nextTick(() => {
-						this.scrollToBottom();
-					});
+			async loadConversationMassage() {
+				const res = await GetMessagesForConversation({
+					conversationID: this.query.conversationID,
+					userID: uni.getStorageSync("openid"),
+				})
+				if (res.state === 1) {
+					res.data.forEach(item => {
+						if (item.SenderID === uni.getStorageSync("openid")) {
+							this.messages.push({
+								sender: 'You',
+								content: item.Content,
+								createdAt: item.CreatedAt
+							});
+						} else {
+							this.messages.push({
+								sender: 'Alice',
+								content: item.Content,
+								createdAt: item.CreatedAt
+							});
+						}
+
+					})
+
+				} else {
+					//获取信息失败
 				}
 			},
-			scrollToBottom() {
-				this.$refs.messageList.scrollTo({
-					top: 10000,
-					behavior: 'smooth',
-				});
+			async sendMessage() {
+				if (this.newMessage.trim() !== '') {
+					const res = await sendMessage({
+						conversationID: this.query.conversationID,
+						senderID: uni.getStorageSync("openid"),
+						content: this.newMessage
+					})
+					if (res.state === 1) {
+						this.messages.push({
+							sender: 'You',
+							content: this.newMessage
+						});
+						this.newMessage = '';
+					} else {
+						//发送失败
+					}
+
+				}
 			},
 			handleFocus() {
 				// 处理键盘弹出
@@ -86,8 +129,10 @@
 		flex: 1;
 		overflow-y: auto;
 		padding: 10px;
+		padding-bottom: calc(env(safe-area-inset-bottom) + 30px);
 		background-color: #f0f0f0;
 		box-sizing: border-box;
+		overflow-wrap: break-word;
 	}
 
 	.message-wrapper {

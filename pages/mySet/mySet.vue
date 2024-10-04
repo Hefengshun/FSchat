@@ -1,8 +1,8 @@
 <template>
 	<view class="content">
-		<uni-list-item :title="'名称:  ' + user.userName" :note="'id:   ' + user.openId"
-			thumb="https://qiniu-web-assets.dcloud.net.cn/unidoc/zh/unicloudlogo.png" thumb-size="lg"></uni-list-item>
-		<uni-section title="用户设置" type="line">
+		<uni-list-chat :title="'工号:  ' + user.userName" avatar="/static/logo.png" :note="'id:   ' + user.openId">
+		</uni-list-chat>
+		<!-- <uni-section title="用户设置" type="line">
 			<uni-list>
 				<uni-list-item title="修改用户名称" @touchend="openDialog('user')" />
 			</uni-list>
@@ -16,19 +16,18 @@
 
 		</uni-section>
 		<view>
-			<!-- 输入框示例 -->
 			<uni-popup ref="inputDialog" type="dialog">
 				<uni-popup-dialog ref="inputClose" mode="input" :title="title" :value="value" :placeholder="placeholder"
 					@confirm="dialogInputConfirm"></uni-popup-dialog>
 			</uni-popup>
-		</view>
+		</view> -->
 	</view>
 </template>
 
 <script>
 	import {
 		updateUser
-	} from "@/request/api.js"
+	} from "@/services/api.js"
 	export default {
 		data() {
 			return {

@@ -1,29 +1,33 @@
 <template>
-	<view class="content">
+	<!-- <view class="info-content"> -->
+	<scroll-view class="message-list" :scroll-y="true" @refresherrefresh="getConversationsWithUnreadCountData"
+		:refresher-enabled="true" :refresher-threshold="70" :refresher-triggered="refresher"
+		:refresher-default-style="'black'">
 		<uni-list :border="true">
-			<uni-swipe-action-item :right-options="options2" :show="isOpened" :auto-close="false" @touchend="change"
-				@click="bindClick">
-				<uni-list-chat title="uni-app"
-					avatar="https://qiniu-web-assets.dcloud.net.cn/unidoc/zh/unicloudlogo.png" note="您收到一条新的消息"
-					time="2020-02-02 20:20" badge-text="12">
+			<uni-list-chat :title="item.FriendName" v-for="item in chatList" :key="item.FriendOpenid"
+				@touchend.stop="toChatPage(item)" avatar="/static/logo.png" :note="item.LastMessage"
+				:time="item.UpdatedAt" :badge-text="item.UnreadCount">
+			</uni-list-chat>
+			<uni-swipe-action-item :right-options="options2" :auto-close="false" @click="bindClick">
+				<uni-list-chat title="演示一条数据" avatar="/static/logo.png" note="此条数据可忽略" time="2020-02-02 20:20"
+					badge-text="12">
 				</uni-list-chat>
-				<!-- 头像显示圆点 -->
 			</uni-swipe-action-item>
 		</uni-list>
-	</view>
+	</scroll-view>
+	<!-- </view> -->
 </template>
 
 <script>
+	import {
+		formatDateTime
+	} from "@/utils/index.js"
+	import {
+		getConversationsWithUnreadCount
+	} from "@/services/api.js"
 	export default {
 		data() {
 			return {
-				avatarList: [{
-					url: 'https://qiniu-web-assets.dcloud.net.cn/unidoc/zh/unicloudlogo.png'
-				}, {
-					url: 'https://qiniu-web-assets.dcloud.net.cn/unidoc/zh/unicloudlogo.png'
-				}, {
-					url: 'https://qiniu-web-assets.dcloud.net.cn/unidoc/zh/unicloudlogo.png'
-				}],
 				isOpened: 'none',
 				options2: [{
 						text: '添加组',
@@ -38,12 +42,29 @@
 						}
 					}
 				],
+				chatList: [],
+				refresher: false,
 			}
 		},
-		onLoad() {
-
+		onShow() {
+			this.getConversationsWithUnreadCountData()
 		},
 		methods: {
+			async getConversationsWithUnreadCountData() {
+				this.refresher = true;
+				const res = await getConversationsWithUnreadCount({
+					userID: uni.getStorageSync("openid")
+				})
+				if (res.state === 1) {
+					this.chatList = res.data.filter(item => {
+						item.UpdatedAt = formatDateTime(item.UpdatedAt)
+						return item
+					})
+				}
+				setTimeout(() => {
+					this.refresher = false;
+				}, 1000)
+			},
 			bindClick(e) {
 				console.log(e);
 				uni.showToast({
@@ -51,17 +72,16 @@
 					icon: 'none'
 				});
 			},
-			change(e) {
-				this.isOpened = e;
+			toChatPage(item) {
 				uni.navigateTo({
-					url: "/pages/chat/chat"
+					url: `/pages/chat/chat?conversationID=${item.ConversationID}&exist=${true}`,
 				})
 			},
 		}
 	}
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 	.chat-custom-right {
 		flex: 1;
 		/* #ifndef APP-NVUE */
@@ -75,5 +95,12 @@
 	.chat-custom-text {
 		font-size: 12px;
 		color: #999;
+	}
+
+
+
+
+	.message-list {
+		height: 100vh;
 	}
 </style>

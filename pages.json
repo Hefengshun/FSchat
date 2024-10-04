@@ -7,7 +7,7 @@
 			}
 		},
 		{
-			"path": "pages/infoList/infoList",
+			"path": "pages/friendList/friendList",
 			"style": {
 				"navigationBarTitleText": "列表"
 			}
@@ -21,7 +21,7 @@
 		{
 			"path": "pages/addFriend/addFriend",
 			"style": {
-				"navigationBarTitleText": "添加朋友"
+				"navigationBarTitleText": "添加同事"
 			}
 		},
 		{
@@ -42,23 +42,23 @@
 		"borderStyle": "black",
 		"backgroundColor": "#333",
 		"color": "#8F8F94",
-		"selectedColor": "#f33e54",
+		"selectedColor": "#19f925",
 		"list": [{
 				"pagePath": "pages/info/info",
-				// "iconPath": "static/img/tabbar/news.png",
-				// "selectedIconPath": "static/img/tabbar/newsactive.png",
+				"iconPath": "static/icon/xiaoxi.png",
+				"selectedIconPath": "static/actionIcon/xiaoxi.png",
 				"text": "消息"
 			},
 			{
-				"pagePath": "pages/infoList/infoList",
-				// "iconPath": "static/img/tabbar/me.png",
-				// "selectedIconPath": "static/img/tabbar/meactive.png",
-				"text": "好友列"
+				"pagePath": "pages/friendList/friendList",
+				"iconPath": "static/icon/tongxunlu.png",
+				"selectedIconPath": "static/actionIcon/tongxunlu.png",
+				"text": "同事列"
 			},
 			{
 				"pagePath": "pages/mySet/mySet",
-				// "iconPath": "static/img/tabbar/me.png",
-				// "selectedIconPath": "static/img/tabbar/meactive.png",
+				"iconPath": "static/icon/my.png",
+				"selectedIconPath": "static/actionIcon/my.png",
 				"text": "我"
 			}
 		]

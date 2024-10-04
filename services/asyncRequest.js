@@ -1,5 +1,7 @@
 // const baseUrl = "http://localhost:8088";
-const baseUrl = "http://192.168.0.108:8088";
+// const baseUrl = "http://192.168.0.108:8088";
+const baseUrl = "http://www.strives.online:8088";
+
 const request = (url, date = {}, type = 'POST', header = {
 	'content-type': 'application/x-www-form-urlencoded'
 }) => {

@@ -1,13 +1,13 @@
 <template>
 	<view class="content">
 		<view class="header">
-			<uni-search-bar placeholder="查找好友" bgColor="#EEEEEE" @confirm="search" cancelButton="none" />
+			<uni-search-bar placeholder="查找同事" bgColor="#EEEEEE" @confirm="search" cancelButton="none" />
 			<uni-icons type="plus" size="30" @touchend="navigateTo">
 			</uni-icons>
 		</view>
 		<view v-for="(item) in friendsDataList" :key="item.user_openid">
-			<uni-swipe-action-item :right-options="options2" :show="isOpened" :auto-close="false" @touchend="change"
-				@click="bindClick">
+			<uni-swipe-action-item :right-options="options2" :show="isOpened" :auto-close="false"
+				@touchend="change(item)" @click="bindClick">
 				<view class="content-box">
 					<text class="content-text">{{item.friend_name}}</text>
 				</view>
@@ -18,8 +18,9 @@
 
 <script>
 	import {
-		friendsList
-	} from "@/request/api.js"
+		friendsList,
+		createConversation
+	} from "@/services/api.js"
 	export default {
 		data() {
 			return {
@@ -47,7 +48,7 @@
 				friendsDataList: []
 			}
 		},
-		onLoad() {
+		onShow() {
 			this.getFriendsList()
 		},
 		methods: {
@@ -66,11 +67,20 @@
 					icon: 'none'
 				});
 			},
-			change(e) {
-				this.isOpened = e;
-				uni.navigateTo({
-					url: "/pages/chat/chat"
+			async change(item) {
+				console.log(item)
+				const res = await createConversation({
+					userOpenid: uni.getStorageSync("openid"),
+					friendOpenid: item.friend_openid
 				})
+				if (res.state === 1) {
+					uni.navigateTo({
+						url: `/pages/chat/chat?conversationID=${res.data.conversationID}&exist=${res.data.exist}`,
+					})
+				} else {
+					// 报错了
+				}
+				// this.isOpened = e;
 			},
 			navigateTo() {
 				uni.navigateTo({

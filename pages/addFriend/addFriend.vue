@@ -10,7 +10,7 @@
 			<!-- accordion -->
 			<uni-collapse class="collapse" v-model="accordionVal">
 				<uni-collapse-item v-for="item in friendsDataList" :key="item" :title="item.friend_name"
-					thumb="https://qiniu-web-assets.dcloud.net.cn/unidoc/zh/unicloudlogo.png">
+					thumb="/static/logo.png">
 					<view class="content">
 						<text class="text">备注：XXXXX</text>
 						<view style="display: contents;">
@@ -42,7 +42,7 @@
 		addFriend,
 		friendsList,
 		handleFriendApply
-	} from "@/request/api.js"
+	} from "@/services/api.js"
 	export default {
 		data() {
 			return {

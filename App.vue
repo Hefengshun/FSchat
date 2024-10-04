@@ -1,7 +1,7 @@
 <script>
 	import {
 		wxLogin
-	} from "@/request/api.js"
+	} from "@/services/api.js"
 	export default {
 		onLaunch: function() {
 			console.log('App Launch')
