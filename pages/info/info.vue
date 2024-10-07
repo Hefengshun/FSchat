@@ -8,12 +8,18 @@
 				@touchend.stop="toChatPage(item)" avatar="/static/logo.png" :note="item.LastMessage"
 				:time="item.UpdatedAt" :badge-text="item.UnreadCount">
 			</uni-list-chat>
-			<uni-swipe-action-item :right-options="options2" :auto-close="false" @click="bindClick">
-				<uni-list-chat title="演示一条数据" avatar="/static/logo.png" note="此条数据可忽略" time="2020-02-02 20:20"
-					badge-text="12">
-				</uni-list-chat>
-			</uni-swipe-action-item>
+			<!-- <uni-swipe-action-item :right-options="options2" :auto-close="false" @click="bindClick">
+					<uni-list-chat title="演示一条数据" avatar="/static/logo.png" note="此条数据可忽略" time="2020-02-02 20:20"
+						badge-text="12">
+					</uni-list-chat>
+				</uni-swipe-action-item> -->
+
 		</uni-list>
+
+		<view class="toChangeFriend" v-show="chatList.length == 0">
+			<text>您还没有选择任何同事进行发送任务，点击跳转选择</text>
+			<button type="button" @click="toChangeFriend">去选择</button>
+		</view>
 	</scroll-view>
 	<!-- </view> -->
 </template>
@@ -50,6 +56,11 @@
 			this.getConversationsWithUnreadCountData()
 		},
 		methods: {
+			toChangeFriend() {
+				uni.switchTab({
+					url: "/pages/friendList/friendList"
+				})
+			},
 			async getConversationsWithUnreadCountData() {
 				this.refresher = true;
 				const res = await getConversationsWithUnreadCount({
@@ -97,7 +108,17 @@
 		color: #999;
 	}
 
+	.toChangeFriend {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		height: 75vh;
 
+		button {
+			margin-top: 30px;
+		}
+	}
 
 
 	.message-list {

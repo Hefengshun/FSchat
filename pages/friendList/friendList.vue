@@ -2,7 +2,7 @@
 	<view class="content">
 		<view class="header">
 			<uni-search-bar placeholder="查找同事" bgColor="#EEEEEE" @confirm="search" cancelButton="none" />
-			<uni-icons type="plus" size="30" @touchend="navigateTo">
+			<uni-icons type="plus" size="30" @touchend="toAddFriend">
 			</uni-icons>
 		</view>
 		<view v-for="(item) in friendsDataList" :key="item.user_openid">
@@ -12,6 +12,10 @@
 					<text class="content-text">{{item.friend_name}}</text>
 				</view>
 			</uni-swipe-action-item>
+		</view>
+		<view class="showInfo" v-show="friendsDataList.length==0">
+			<text>那您没绑定同事，请点击添加按钮绑定同事</text>
+			<button type="button" @click="toAddFriend">添加同事</button>
 		</view>
 	</view>
 </template>
@@ -82,7 +86,7 @@
 				}
 				// this.isOpened = e;
 			},
-			navigateTo() {
+			toAddFriend() {
 				uni.navigateTo({
 					url: "/pages/addFriend/addFriend"
 				})
@@ -104,7 +108,17 @@
 		}
 	}
 
+	.showInfo {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		height: 65vh;
 
+		button {
+			margin-top: 30px;
+		}
+	}
 
 
 	.content-box {
