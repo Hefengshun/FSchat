@@ -16,7 +16,7 @@
 
 		</uni-list>
 
-		<view class="toChangeFriend" v-show="chatList.length == 0">
+		<view class="toChangeFriend" v-if="chatList.length == 0">
 			<text>您还没有选择任何同事进行发送任务，点击跳转选择</text>
 			<button type="button" @click="toChangeFriend">去选择</button>
 		</view>

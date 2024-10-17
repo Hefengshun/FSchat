@@ -1,7 +1,7 @@
 <template>
 	<view class="content">
 		<view class="header">
-			<uni-search-bar placeholder="输入uuid查找添加" v-model="searchValue" bgColor="#EEEEEE" @confirm="search"
+			<uni-search-bar placeholder="输入id查找添加" v-model="searchValue" bgColor="#EEEEEE" @confirm="search"
 				cancelButton="none" />
 			<uni-icons type="plus" size="30" @touchend="search">
 			</uni-icons>
@@ -34,12 +34,21 @@
 
 			</uni-popup>
 		</view>
+
+		<view>
+			<!-- 查询信息展示 -->
+			<uni-popup ref="userInfoDialog" type="dialog">
+				<uni-popup-dialog type="info" cancelText="取消" confirmText="添加" title="用户名称" :content="findUserInfoData"
+					@confirm="addFriendFunc" @close="dialogClose"></uni-popup-dialog>
+			</uni-popup>
+		</view>
 	</view>
 </template>
 
 <script>
 	import {
 		addFriend,
+		findUserInfo,
 		friendsList,
 		handleFriendApply
 	} from "@/services/api.js"
@@ -49,6 +58,7 @@
 				massage: '',
 				searchValue: '',
 				accordionVal: '1',
+				findUserInfoData: "",
 				openid: uni.getStorageSync("openid"),
 				friendsDataList: []
 			}
@@ -67,7 +77,7 @@
 			},
 			async search() {
 				console.log(this.searchValue, this.openid)
-				if (this.searchValue === '') {
+				if (this.searchValue == "") {
 					this.massage = "请填写ID"
 					this.$refs.alertDialog.open()
 					return
@@ -77,6 +87,22 @@
 					this.$refs.alertDialog.open()
 					return
 				}
+
+				const res = await findUserInfo({
+					userOpenid: this.searchValue
+				})
+				if (res.state === 0) {
+					this.massage = "查询失败！或者未找到此人"
+
+					this.$refs.alertDialog.open()
+				} else {
+					// 展示此人信息 添加还是取消
+					this.findUserInfoData = res.data.userName
+					this.$refs.userInfoDialog.open()
+				}
+
+			},
+			async addFriendFunc() {
 				const res = await addFriend({
 					openid: this.openid,
 					friendOpenid: this.searchValue

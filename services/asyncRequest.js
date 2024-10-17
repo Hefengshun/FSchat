@@ -1,6 +1,10 @@
-// const baseUrl = "http://localhost:8088";
-// const baseUrl = "http://192.168.0.108:8088";
-const baseUrl = "http://www.strives.online:8088";
+let baseUrl;
+
+if (process.env.NODE_ENV === 'development') {
+	baseUrl = "http://192.168.0.108:8088"; // 发布到生产环境时，此处代码会被摇树移除掉。
+} else {
+	baseUrl = "https://www.strives.online:8088";
+}
 
 const request = (url, date = {}, type = 'POST', header = {
 	'content-type': 'application/x-www-form-urlencoded'

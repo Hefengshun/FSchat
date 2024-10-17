@@ -63,6 +63,7 @@
 					conversationID: this.query.conversationID,
 					userID: uni.getStorageSync("openid"),
 				})
+				this.messages = []
 				if (res.state === 1) {
 					res.data.forEach(item => {
 						if (item.SenderID === uni.getStorageSync("openid")) {

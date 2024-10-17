@@ -4,6 +4,8 @@ export const wxLogin = (data, callback, hideLoading) => request('/api/wxLogin', 
 
 export const updateUser = (data, callback, hideLoading) => request('/api/updateUser', data, 'POST');
 
+export const findUserInfo = (data, callback, hideLoading) => request('/api/wxGetUserInfo', data, 'POST');
+
 export const addFriend = (data, callback, hideLoading) => request('/api/wxAddFriends', data, 'POST');
 
 export const friendsList = (data, callback, hideLoading) => request('/api/getUserFriends', data, 'POST');

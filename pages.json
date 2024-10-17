@@ -13,7 +13,7 @@
 			}
 		},
 		{
-			"path": "pages/mySet/mySet",
+			"path": "pages/userSet/userSet",
 			"style": {
 				"navigationBarTitleText": "设置"
 			}
@@ -56,7 +56,7 @@
 				"text": "同事列"
 			},
 			{
-				"pagePath": "pages/mySet/mySet",
+				"pagePath": "pages/userSet/userSet",
 				"iconPath": "static/icon/my.png",
 				"selectedIconPath": "static/actionIcon/my.png",
 				"text": "我"

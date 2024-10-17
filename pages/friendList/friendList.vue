@@ -13,7 +13,7 @@
 				</view>
 			</uni-swipe-action-item>
 		</view>
-		<view class="showInfo" v-show="friendsDataList.length==0">
+		<view class="showInfo" v-if="friendsDataList.length == 0">
 			<text>那您没绑定同事，请点击添加按钮绑定同事</text>
 			<button type="button" @click="toAddFriend">添加同事</button>
 		</view>
